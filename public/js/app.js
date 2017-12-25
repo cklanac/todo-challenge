@@ -59,34 +59,40 @@ jQuery(function ($) {
       this.baseUrl = baseUrl;
     },
     create: function (obj) {
-      return $.ajax({
-        type: 'POST',
-        url: this.baseUrl,
-        data: obj ? JSON.stringify(obj) : null,
-        dataType: 'json',
-        contentType: 'application/json',
-      });
+      return fetch(this.baseUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: obj ? JSON.stringify(obj) : null
+      }).then(res => res.json());
     },
     read: function () {
-      return $.ajax({
-        type: 'GET',
-        url: this.baseUrl
-      });
+      return fetch(this.baseUrl, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json'
+        }
+      }).then(res => res.json());
     },
     update: function (id, obj) {
-      return $.ajax({
-        type: 'PUT',
-        url: `${this.baseUrl}/${id}`,
-        data: obj ? JSON.stringify(obj) : null,
-        dataType: 'json',
-        contentType: 'application/json',
-      });
+      return fetch(`${this.baseUrl}/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: obj ? JSON.stringify(obj) : null
+      }).then(res => res.json());
     },
     delete: function (id) {
-      return $.ajax({
-        type: 'DELETE',
-        url: `${this.baseUrl}/${id}`,
-      });
+      return fetch(`${this.baseUrl}/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Accept': 'application/json'
+        }
+      }).then(res => res.text());
     }
   };
 
@@ -255,7 +261,7 @@ jQuery(function ($) {
         this.render();
         return;
       }
-      
+
       const val = el.val().trim();
       const id = this.getIdFromEl(event.target);
       const todo = store.getTodoById(id);
